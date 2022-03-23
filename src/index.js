@@ -1,13 +1,19 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import App from './App';
+import React from "react";
+import ReactDOM from "react-dom";
+import App from "./App";
 import { ImageProvider } from "./context/ImageContext";
+import { AuthProvider } from "./context/authContext";
+import { BrowserRouter } from "react-router-dom";
 
 ReactDOM.render(
   <React.StrictMode>
-    <ImageProvider>
-      <App />
-    </ImageProvider>
+    <BrowserRouter>
+      <AuthProvider>
+        <ImageProvider>
+          <App />
+        </ImageProvider>
+      </AuthProvider>
+    </BrowserRouter>
   </React.StrictMode>,
-  document.getElementById('root')
+  document.getElementById("root")
 );
