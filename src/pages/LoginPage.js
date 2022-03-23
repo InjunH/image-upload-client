@@ -24,8 +24,8 @@ const LoginPage = () => {
       });
       history.push("/");
       toast.success("로그인 되었습니다");
-    } catch (error) {
-      toast.error(error.message);
+    } catch (err) {
+      toast.error(err.response.data.message);
     }
   };
   return (
