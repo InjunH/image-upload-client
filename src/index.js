@@ -10,6 +10,7 @@ ReactDOM.render(
     <BrowserRouter>
       <AuthProvider>
         <ImageProvider>
+          {/* 하위에 있는 모든 컴포넌트들이 값 접근 해진다. */}
           <App />
         </ImageProvider>
       </AuthProvider>
