@@ -6,7 +6,7 @@ import ProgressBar from "./ProgressBar";
 import { ImageContext } from "../context/ImageContext";
 
 const UploadForm = () => {
-  const [images, setImages] = useContext(ImageContext);
+  const { images, setImages, myImages, setMyImages } = useContext(ImageContext);
   const defaultFileName = "이미지 파일을 업로드 해주세여";
 
   const [files, setFiles] = useState(null);
@@ -16,6 +16,8 @@ const UploadForm = () => {
   const [percent, setPercent] = useState(0);
 
   const [imgSrc, setImgSrc] = useState(null);
+
+  const [isPublic, setIsPublic] = useState(true);
 
   const imageSelectHandler = (event) => {
     const imageFile = event.target.files[0];
@@ -32,6 +34,8 @@ const UploadForm = () => {
     e.preventDefault();
     const formData = new FormData();
     formData.append("images", files);
+    formData.append("public", isPublic);
+
     try {
       const res = await axios.post("/images", formData, {
         headers: { "Content-Type": "multipart/form-data" },
@@ -40,8 +44,8 @@ const UploadForm = () => {
           setFileName(defaultFileName);
         },
       });
-      console.log({ res });
-      setImages([...images, res.data]);
+      if (isPublic) setImages([...images, res.data]);
+      else setMyImages([...myImages, res.data]);
       toast.success("이미지 업로드 성공");
       setTimeout(() => {
         setPercent(0);
@@ -49,13 +53,11 @@ const UploadForm = () => {
         setImgSrc(null);
       }, 3000);
     } catch (err) {
-      console.error({ err });
-
+      toast.error(err.response.data.message);
       setPercent(0);
       setFileName(defaultFileName);
       setImgSrc(null);
-
-      toast.error("fail");
+      console.error({ err });
     }
   };
 
@@ -63,6 +65,7 @@ const UploadForm = () => {
     <form onSubmit={onSubmit}>
       {/* {percent} */}
       <img
+        alt=""
         src={imgSrc}
         className={`image-preview ${imgSrc && "image-preview-show"}`}
       ></img>
@@ -76,7 +79,13 @@ const UploadForm = () => {
           onChange={imageSelectHandler}
         />
       </div>
-
+      <input
+        type="checkbox"
+        id="public-check"
+        value={!isPublic}
+        onChange={() => setIsPublic(!isPublic)}
+      />
+      <label htmlFor="public-check">비공개</label>
       <button
         type="submit"
         style={{

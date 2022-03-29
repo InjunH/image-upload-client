@@ -8,7 +8,6 @@ const ToolBar = () => {
   const [me, setMe] = useContext(AuthContext);
 
   const logoutHandler = async () => {
-    console.log(me.sessionId);
     try {
       await axios.patch("/users/logout");
       setMe();
@@ -25,7 +24,10 @@ const ToolBar = () => {
         <span>홈</span>
       </Link>
       {me ? (
-        <span onClick={logoutHandler} style={{ float: "right" }}>
+        <span
+          onClick={logoutHandler}
+          style={{ float: "right", cursor: "pointer" }}
+        >
           로그아웃({me.name})
         </span>
       ) : (
