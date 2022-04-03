@@ -1,7 +1,8 @@
 import React, { useContext } from "react";
+import { Link } from "react-router-dom";
 import { AuthContext } from "../context/authContext";
 import { ImageContext } from "../context/ImageContext";
-
+import "./ImageList.css";
 // 외부에서 영향을 받을때 useEffect 사용
 // 외부의 상태를 바꿨다 sideEffect
 // useEffect 두가지 정보를 받는다
@@ -10,12 +11,9 @@ const ImageList = () => {
   const { images, myImages, isPublic, setIsPublic } = useContext(ImageContext);
   const [me] = useContext(AuthContext);
   const imgList = (isPublic ? images : myImages).map((image) => (
-    <img
-      alt=""
-      key={image.key}
-      style={{ width: "100%" }}
-      src={`http://localhost:5001/uploads/${image.key}`}
-    />
+    <Link key={image.key} to={`images/${image._id}`}>
+      <img alt="" src={`http://localhost:5001/uploads/${image.key}`} />
+    </Link>
   ));
   return (
     <div>
@@ -27,7 +25,7 @@ const ImageList = () => {
           {(isPublic ? "개인" : "공개") + "사진 보기"}
         </button>
       )}
-      {imgList}
+      <div className="image-list-container">{imgList}</div>
     </div>
   );
 };

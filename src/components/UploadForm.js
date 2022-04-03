@@ -20,8 +20,9 @@ const UploadForm = () => {
   const [isPublic, setIsPublic] = useState(true);
 
   const imageSelectHandler = (event) => {
-    const imageFile = event.target.files[0];
-    setFiles(imageFile);
+    const imageFiles = event.target.files;
+    setFiles(imageFiles);
+    const imageFile = imageFiles[0];
     setFileName(imageFile.name);
     // 첨부한 파일 미리보기
     const fileReader = new FileReader();
@@ -33,7 +34,10 @@ const UploadForm = () => {
     // 기본 새로 고침 방지
     e.preventDefault();
     const formData = new FormData();
-    formData.append("images", files);
+    for (let file of files) {
+      formData.append("images", files);
+    }
+
     formData.append("public", isPublic);
 
     try {
@@ -75,6 +79,7 @@ const UploadForm = () => {
         <input
           id="image"
           type="file"
+          multiple
           accept="image/*"
           onChange={imageSelectHandler}
         />
