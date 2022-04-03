@@ -20,7 +20,6 @@ const RegisgerPage = () => {
       if (password < 6) throw new Error("비밀번호가 너무 짧습니다");
       if (password !== passwordCheck) throw new Error("비밀번호가 다릅니다");
 
-      console.log({ name, username, password, passwordCheck });
       const result = await axios.post("/users/register", {
         name,
         username,
