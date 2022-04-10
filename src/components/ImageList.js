@@ -8,7 +8,15 @@ import "./ImageList.css";
 // useEffect 두가지 정보를 받는다
 // 함수 , 실행 시점
 const ImageList = () => {
-  const { images, myImages, isPublic, setIsPublic } = useContext(ImageContext);
+  const {
+    images,
+    myImages,
+    isPublic,
+    setIsPublic,
+    loaderMoreImages,
+    imageLoading,
+    imageError,
+  } = useContext(ImageContext);
   const [me] = useContext(AuthContext);
   const imgList = (isPublic ? images : myImages).map((image) => (
     <Link key={image.key} to={`images/${image._id}`}>
@@ -26,6 +34,12 @@ const ImageList = () => {
         </button>
       )}
       <div className="image-list-container">{imgList}</div>
+      {imageError && <div>Error....</div>}
+      {imageLoading ? (
+        <div>Loadding </div>
+      ) : (
+        <button onClick={loaderMoreImages}>Load Image more</button>
+      )}
     </div>
   );
 };

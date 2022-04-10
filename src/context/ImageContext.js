@@ -10,17 +10,22 @@ export const ImageProvider = (prop) => {
   const [images, setImages] = useState([]);
   const [myImages, setMyImages] = useState([]);
   const [isPublic, setIsPublic] = useState(true);
+  const [imageUrl, setImageUrl] = useState("/images");
+  const [imageLoading, setImageLoading] = useState(false);
+  const [imageError, setImageError] = useState(false);
   const [me] = useContext(AuthContext);
-  // 함수 외에서 발생하는 외부 상태 변경시 사용
-  // useEffect(() => {}, []) 첫번째 인자 : 함수 / 두번째 인자 -> 함수를 언제 실행할지
-  //   빈 배열 넘길시 한번만 실행
-  //   배열 안에 state 넘길시 state 변경 일어날때마다 실행
+
   useEffect(() => {
+    setImageLoading(true);
     axios
       .get("/images")
-      .then((result) => setImages(result.data))
-      .catch((err) => console.log(err));
-  }, []);
+      .then((result) => setImages((prevData) => [...prevData, ...result.data]))
+      .catch((err) => {
+        console.log(err);
+        setImageError(err);
+      })
+      .finally(() => setImageLoading(false));
+  }, [imageUrl]);
   useEffect(() => {
     if (me) {
       setTimeout(() => {
@@ -35,6 +40,11 @@ export const ImageProvider = (prop) => {
     }
   }, [me]);
 
+  const loaderMoreImages = () => {
+    if (images.length === 0) return;
+    const lastImageId = images[images.length - 1]._id;
+    setImageUrl(`/images?lastid=${lastImageId}`);
+  };
   return (
     // value : 하위 자식 컴포넌트들에게 적용 시킨다
     <ImageContext.Provider
@@ -45,6 +55,9 @@ export const ImageProvider = (prop) => {
         setMyImages,
         isPublic,
         setIsPublic,
+        loaderMoreImages,
+        imageLoading,
+        imageError,
       }}
     >
       {prop.children}
