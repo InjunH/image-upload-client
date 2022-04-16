@@ -1,4 +1,10 @@
-import React, { createContext, useState, useEffect, useContext } from "react";
+import React, {
+  createContext,
+  useState,
+  useEffect,
+  useContext,
+  useRef,
+} from "react";
 import axios from "axios";
 import { AuthContext } from "./authContext";
 
@@ -14,18 +20,28 @@ export const ImageProvider = (prop) => {
   const [imageLoading, setImageLoading] = useState(false);
   const [imageError, setImageError] = useState(false);
   const [me] = useContext(AuthContext);
+  const pastImageUrlRef = useRef();
 
   useEffect(() => {
+    if (pastImageUrlRef.current === imageUrl) return;
     setImageLoading(true);
     axios
-      .get("/images")
-      .then((result) => setImages((prevData) => [...prevData, ...result.data]))
+      .get(imageUrl)
+      .then((result) =>
+        isPublic
+          ? setImages((prevData) => [...prevData, ...result.data])
+          : setMyImages((prevData) => [...prevData, ...result.data])
+      )
       .catch((err) => {
         console.log(err);
         setImageError(err);
       })
-      .finally(() => setImageLoading(false));
-  }, [imageUrl]);
+      .finally(() => {
+        setImageLoading(false);
+        pastImageUrlRef.current = imageUrl;
+      });
+  }, [imageUrl, isPublic]);
+
   useEffect(() => {
     if (me) {
       setTimeout(() => {
@@ -40,22 +56,16 @@ export const ImageProvider = (prop) => {
     }
   }, [me]);
 
-  const loaderMoreImages = () => {
-    if (images.length === 0) return;
-    const lastImageId = images[images.length - 1]._id;
-    setImageUrl(`/images?lastid=${lastImageId}`);
-  };
   return (
     // value : 하위 자식 컴포넌트들에게 적용 시킨다
     <ImageContext.Provider
       value={{
-        images,
+        images: isPublic ? images : myImages,
         setImages,
-        myImages,
         setMyImages,
         isPublic,
         setIsPublic,
-        loaderMoreImages,
+        setImageUrl,
         imageLoading,
         imageError,
       }}

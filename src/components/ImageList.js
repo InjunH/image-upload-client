@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useRef, useEffect, useCallback } from "react";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../context/authContext";
 import { ImageContext } from "../context/ImageContext";
@@ -10,19 +10,43 @@ import "./ImageList.css";
 const ImageList = () => {
   const {
     images,
-    myImages,
     isPublic,
     setIsPublic,
-    loaderMoreImages,
     imageLoading,
     imageError,
+    setImageUrl,
   } = useContext(ImageContext);
+
   const [me] = useContext(AuthContext);
-  const imgList = (isPublic ? images : myImages).map((image) => (
-    <Link key={image.key} to={`images/${image._id}`}>
+  const elementRef = useRef(null);
+
+  const loaderMoreImages = useCallback(() => {
+    if (images.length === 0 || imageLoading) return;
+    const lastImageId = images[images.length - 1]._id;
+    setImageUrl(`${isPublic ? "" : "/user/me"} /images?lastid=${lastImageId}`);
+  }, [images, imageLoading, isPublic, setImageUrl]);
+
+  useEffect(() => {
+    console.log("intersectionsdsd");
+    if (!elementRef.current) return;
+    const observer = new IntersectionObserver(([entry]) => {
+      console.log("intersection", entry.isIntersecting);
+      if (entry.isIntersecting) loaderMoreImages();
+    });
+    observer.observe(elementRef.current);
+    return () => observer.disconnect();
+  }, [loaderMoreImages]);
+
+  const imgList = images.map((image, index) => (
+    <Link
+      key={image.key}
+      to={`/images/${image._id}`}
+      ref={index + 5 === images.length ? elementRef : undefined}
+    >
       <img alt="" src={`http://localhost:5001/uploads/${image.key}`} />
     </Link>
   ));
+
   return (
     <div>
       <h3 style={{ display: "inline-block", marginRight: 10 }}>
@@ -35,11 +59,7 @@ const ImageList = () => {
       )}
       <div className="image-list-container">{imgList}</div>
       {imageError && <div>Error....</div>}
-      {imageLoading ? (
-        <div>Loadding </div>
-      ) : (
-        <button onClick={loaderMoreImages}>Load Image more</button>
-      )}
+      {imageLoading && <div>Loadding </div>}
     </div>
   );
 };
