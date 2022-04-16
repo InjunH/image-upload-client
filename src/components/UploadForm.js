@@ -68,7 +68,6 @@ const UploadForm = () => {
       toast.error(err.response.data.message);
       setPercent([]);
       setPreviews([]);
-      setIsLoading(false);
       inputRef.current.value = null;
       console.error({ err });
     }
