@@ -25,7 +25,7 @@ export const ImageProvider = (prop) => {
   useEffect(() => {
     if (pastImageUrlRef.current === imageUrl) return;
     setImageLoading(true);
-    console.log(imageUrl);
+    // console.log(imageUrl);
     axios
       .get(imageUrl)
       .then((result) =>

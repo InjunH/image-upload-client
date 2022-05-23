@@ -26,7 +26,7 @@ const ImageList = () => {
   useEffect(() => {
     if (!elementRef.current) return;
     const observer = new IntersectionObserver(([entry]) => {
-      console.log("intersection", entry.isIntersecting);
+      // console.log("intersection", entry.isIntersecting);
       if (entry.isIntersecting) loaderMoreImages();
     });
     observer.observe(elementRef.current);
