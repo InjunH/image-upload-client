@@ -13,7 +13,7 @@ const App = () => {
     <div style={{ maxWidth: 600, margin: "auto" }}>
       <ToastContainer />
       <ToolBar></ToolBar>
-      <Switch>
+      <Switch>    
         <Route path="/images/:imageId" exact component={ImagePage}></Route>
         <Route path="/auth/register" exact component={RegisgerPage}></Route>
         <Route path="/auth/login" exact component={LoginPage}></Route>
