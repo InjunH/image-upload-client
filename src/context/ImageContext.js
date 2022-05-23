@@ -25,6 +25,7 @@ export const ImageProvider = (prop) => {
   useEffect(() => {
     if (pastImageUrlRef.current === imageUrl) return;
     setImageLoading(true);
+    console.log(imageUrl);
     axios
       .get(imageUrl)
       .then((result) =>
@@ -48,7 +49,7 @@ export const ImageProvider = (prop) => {
         axios
           .get("/users/me/images")
           .then((result) => setMyImages(result.data))
-          .catch((err) => console.log(err));
+          .catch((err) => console.error(err));
       }, 0);
     } else {
       setMyImages([]);
@@ -57,7 +58,6 @@ export const ImageProvider = (prop) => {
   }, [me]);
 
   return (
-    // value : 하위 자식 컴포넌트들에게 적용 시킨다
     <ImageContext.Provider
       value={{
         images: isPublic ? images : myImages,
