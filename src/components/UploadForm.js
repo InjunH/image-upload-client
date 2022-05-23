@@ -45,44 +45,44 @@ const UploadForm = () => {
         contentTypes: [...files].map((file) => file.type),
       });
 
-      await Promise.all(
-        [...files].map((file, index) => {
-          const { presigned } = presignedData.data[index];
-          const formData = new FormData();
-          for (const key in presigned.fields) {
-            formData.append(key, presigned.fields[key]);
-          }
-          formData.append("Content-Type", file.type);
-          formData.append("file", file);
-          return axios.post(presigned.url, formData, {
-            onUploadProgress: (e) => {
-              setPercent((prevData) => {
-                const newData = [...prevData];
-                newData[index] = Math.round((100 * e.loaded) / e.total);
-                return newData;
-              });
-            },
-          });
-        })
-      );
+      // await Promise.all(
+      //   [...files].map((file, index) => {
+      //     const { presigned } = presignedData.data[index];
+      //     const formData = new FormData();
+      //     for (const key in presigned.fields) {
+      //       formData.append(key, presigned.fields[key]);
+      //     }
+      //     formData.append("Content-Type", file.type);
+      //     formData.append("file", file);
+      //     return axios.post(presigned.url, formData, {
+      //       onUploadProgress: (e) => {
+      //         setPercent((prevData) => {
+      //           const newData = [...prevData];
+      //           newData[index] = Math.round((100 * e.loaded) / e.total);
+      //           return newData;
+      //         });
+      //       },
+      //     });
+      //   })
+      // );
 
-      const res = await axios.post("/images", {
-        images: [...files].map((file, index) => ({
-          imageKey: presignedData.data[index].imageKey,
-          originalname: file.name,
-        })),
-        public: isPublic,
-      });
+      // const res = await axios.post("/images", {
+      //   images: [...files].map((file, index) => ({
+      //     imageKey: presignedData.data[index].imageKey,
+      //     originalname: file.name,
+      //   })),
+      //   public: isPublic,
+      // });
 
-      if (isPublic) setImages((prevData) => [...res.data, ...prevData]);
-      setMyImages((prevData) => [...res.data, ...prevData]);
+      // if (isPublic) setImages((prevData) => [...res.data, ...prevData]);
+      // setMyImages((prevData) => [...res.data, ...prevData]);
 
-      toast.success("이미지 업로드 성공");
-      setTimeout(() => {
-        setPercent([]);
-        setPreviews([]);
-        setIsLoading(false);
-      }, 3000);
+      // toast.success("이미지 업로드 성공");
+      // setTimeout(() => {
+      //   setPercent([]);
+      //   setPreviews([]);
+      //   setIsLoading(false);
+      // }, 3000);
     } catch (err) {
       console.error({ err });
       toast.error(err.message);
@@ -124,6 +124,33 @@ const UploadForm = () => {
   //     console.error({ err });
   //   }
   // };
+  const onSubmit = async (e) => {
+    e.preventDefault();
+    const formData = new FormData();
+    for (let file of files) formData.append("image", file);
+    formData.append("public", isPublic);
+    try {
+      console.log("hihihi");
+      const res = await axios.post("/images", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+        onUploadProgress: (e) => {
+          setPercent(Math.round((100 * e.loaded) / e.total));
+        },
+      });
+      if (isPublic) setImages((prevData) => [...res.data, ...prevData]);
+      setMyImages((prevData) => [...res.data, ...prevData]);
+      toast.success("이미지 업로드 성공!");
+      setTimeout(() => {
+        setPercent([]);
+        setPreviews([]);
+      }, 3000);
+    } catch (err) {
+      console.error(err);
+      toast.error(err.response.data.message);
+      setPercent([]);
+      setPreviews([]);
+    }
+  };
 
   const previewImages = previews.map((preview, index) => (
     <div key={index}>
@@ -146,7 +173,8 @@ const UploadForm = () => {
         );
 
   return (
-    <form onSubmit={onSubmitV2}>
+    <form onSubmit={onSubmit}>
+      {/* <form onSubmit={onSubmitV2}> */}
       <div
         style={{
           display: "flex",

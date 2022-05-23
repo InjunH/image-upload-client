@@ -41,8 +41,12 @@ const ImageList = () => {
     >
       <img
         alt=""
-        src={`https://image-upload-tutorial-ij.s3.ap-northeast-2.amazonaws.com/raw/${image.key}`}
+        src={`https://test2-ij-image-upload.s3.ap-northeast-2.amazonaws.com/raw/${image.key}`}
       />
+      {/* <img
+        alt=""
+        src={`https://image-upload-tutorial-ij.s3.ap-northeast-2.amazonaws.com/raw/${image.key}`}
+      /> */}
     </Link>
   ));
 
