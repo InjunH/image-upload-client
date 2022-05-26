@@ -54,29 +54,28 @@ const UploadForm = () => {
           }
           formData.append("Content-Type", file.type);
           formData.append("file", file);
-          return axios.post(presigned.url, formData);
-          // return axios.post(presigned.url, formData, {
-          //   onUploadProgress: (e) => {
-          //     setPercent((prevData) => {
-          //       const newData = [...prevData];
-          //       newData[index] = Math.round((100 * e.loaded) / e.total);
-          //       return newData;
-          //     });
-          //   },
-          // });
+          return axios.post(presigned.url, formData, {
+            onUploadProgress: (e) => {
+              setPercent((prevData) => {
+                const newData = [...prevData];
+                newData[index] = Math.round((100 * e.loaded) / e.total);
+                return newData;
+              });
+            },
+          });
         })
       );
 
-      // const res = await axios.post("/images", {
-      //   images: [...files].map((file, index) => ({
-      //     imageKey: presignedData.data[index].imageKey,
-      //     originalname: file.name,
-      //   })),
-      //   public: isPublic,
-      // });
+      const res = await axios.post("/images", {
+        images: [...files].map((file, index) => ({
+          imageKey: presignedData.data[index].imageKey,
+          originalname: file.name,
+        })),
+        public: isPublic,
+      });
 
-      // if (isPublic) setImages((prevData) => [...res.data, ...prevData]);
-      // setMyImages((prevData) => [...res.data, ...prevData]);
+      if (isPublic) setImages((prevData) => [...res.data, ...prevData]);
+      setMyImages((prevData) => [...res.data, ...prevData]);
 
       toast.success("이미지 업로드 성공");
       setTimeout(() => {
