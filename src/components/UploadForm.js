@@ -79,14 +79,14 @@ const UploadForm = () => {
 
       toast.success("이미지 업로드 성공");
       setTimeout(() => {
-        setPercent(0);
+        setPercent([]);
         setPreviews([]);
         setIsLoading(false);
       }, 3000);
     } catch (err) {
       console.error({ err });
       toast.error(err.message);
-      setPercent(0);
+      setPercent([]);
       setPreviews([]);
       // inputRef.current.value = null;
     }
