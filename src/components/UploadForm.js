@@ -92,38 +92,38 @@ const UploadForm = () => {
     }
   };
 
-  // const onSubmit = async (e) => {
-  //   // 기본 새로 고침 방지
-  //   e.preventDefault();
-  //   const formData = new FormData();
-  //   if (files == null) return toast.error("최소 한장 이상 첨부하세요");
-  //   for (let file of files) formData.append("images", file);
-  //   formData.append("public", isPublic);
+  const onSubmit = async (e) => {
+    // 기본 새로 고침 방지
+    e.preventDefault();
+    const formData = new FormData();
+    if (files == null) return toast.error("최소 한장 이상 첨부하세요");
+    for (let file of files) formData.append("images", file);
+    formData.append("public", isPublic);
 
-  //   try {
-  //     const res = await axios.post("/images", formData, {
-  //       headers: { "Content-Type": "multipart/form-data" },
-  //       onUploadProgress: (e) => {
-  //         setPercent(Math.round((100 * e.loaded) / e.total));
-  //       },
-  //     });
-  //     if (isPublic) setImages((prevData) => [...res.data, ...prevData]);
-  //     setMyImages((prevData) => [...res.data, ...prevData]);
-  //     toast.success("이미지 업로드 성공");
-  //     setTimeout(() => {
-  //       setPercent(0);
-  //       setPreviews([]);
-  //       // setIsLoading(false);
-  //       // inputRef.current.value = null;
-  //     }, 3000);
-  //   } catch (err) {
-  //     toast.error(err.response.data.message);
-  //     setPercent([]);
-  //     setPreviews([]);
-  //     inputRef.current.value = null;
-  //     console.error({ err });
-  //   }
-  // };
+    try {
+      const res = await axios.post("/images", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+        onUploadProgress: (e) => {
+          setPercent(Math.round((100 * e.loaded) / e.total));
+        },
+      });
+      if (isPublic) setImages((prevData) => [...res.data, ...prevData]);
+      setMyImages((prevData) => [...res.data, ...prevData]);
+      toast.success("이미지 업로드 성공");
+      setTimeout(() => {
+        setPercent(0);
+        setPreviews([]);
+        // setIsLoading(false);
+        // inputRef.current.value = null;
+      }, 3000);
+    } catch (err) {
+      toast.error(err.response.data.message);
+      setPercent([]);
+      setPreviews([]);
+      inputRef.current.value = null;
+      console.error({ err });
+    }
+  };
 
   const previewImages = previews.map((preview, index) => (
     <div key={index}>
@@ -146,7 +146,8 @@ const UploadForm = () => {
         );
 
   return (
-    <form onSubmit={onSubmitV2}>
+    // <form onSubmit={onSubmitV2}>
+    <form onSubmit={onSubmit}>
       <div
         style={{
           display: "flex",
