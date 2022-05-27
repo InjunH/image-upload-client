@@ -95,9 +95,19 @@ const ImagePage = () => {
       <img
         alt={imageId}
         style={{ width: "100%" }}
-        src={`https://test2-ij-image-upload.s3.ap-northeast-2.amazonaws.com/raw/${image.key}`}
+        src={`https://d1jrsderyzok6e.cloudfront.net/w600/${image.key}`}
       ></img>
-      <span>좋아요 {image.likes.length}</span>
+      {/* <img
+        alt={imageId}
+        style={{ width: "100%" }}
+        src={`https://test2-ij-image-upload.s3.ap-northeast-2.amazonaws.com/w600/${image.key}`}
+      ></img> */}
+      {/* <img
+        alt={imageId}
+        style={{ width: "100%" }}
+        src={`https://test2-ij-image-upload.s3.ap-northeast-2.amazonaws.com/raw/${image.key}`}
+      ></img> */}
+      {/* <span>좋아요 {image.likes.length}</span> */}
       {me && image.user._id === me.userId && (
         <button
           style={{ float: "right", marginLeft: 10 }}

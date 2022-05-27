@@ -39,7 +39,7 @@ const UploadForm = () => {
   const onSubmitV2 = async (e) => {
     // 기본 새로 고침 방지
     e.preventDefault();
-
+    setIsLoading(true);
     try {
       const presignedData = await axios.post("/images/presigned", {
         contentTypes: [...files].map((file) => file.type),

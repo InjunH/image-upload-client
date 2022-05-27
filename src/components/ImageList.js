@@ -1,8 +1,9 @@
 import React, { useContext, useRef, useEffect, useCallback } from "react";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../context/authContext";
-import { ImageContext } from "../context/ImageContext";
 import "./ImageList.css";
+import { ImageContext } from "../context/ImageContext";
+import Image from "./Image"
 
 const ImageList = () => {
   const {
@@ -39,10 +40,21 @@ const ImageList = () => {
       to={`/images/${image._id}`}
       ref={index + 5 === images.length ? elementRef : undefined}
     >
-      <img
+      {/* <Image imageUrl={`https://test2-ij-image-upload.s3.ap-northeast-2.amazonaws.com/w140/${image.key}`}></Image> */}
+      {/* 원본 조회시 */}
+      {/* <img
         alt=""
         src={`https://test2-ij-image-upload.s3.ap-northeast-2.amazonaws.com/raw/${image.key}`}
-      />
+      /> */}
+      {/* image Resizing */}
+      {/* <img
+        alt=""
+        src={`https://test2-ij-image-upload.s3.ap-northeast-2.amazonaws.com/w140/${image.key}`}
+      /> */}
+      {/* // cdn 적용 */}
+      <Image imageUrl={`https://d1jrsderyzok6e.cloudfront.net/w140/${image.key}`}></Image>
+      
+      {/* <Image imageUrl={`https://test2-ij-image-upload.s3.ap-northeast-2.amazonaws.com/w140/${image.key}`}></Image> */}
       {/* <img
         alt=""
         src={`https://image-upload-tutorial-ij.s3.ap-northeast-2.amazonaws.com/raw/${image.key}`}
